@@ -32,16 +32,16 @@ if (process.env.DEBUG == 1) console.log('Debugging is enabled.');
 
   const rest = new REST({ version: '9' }).setToken(token);
 
-  let debugcommands = commands.map((x) => ({ ...x, name: '__debug_' + x.name }));
-  console.log(debugcommands);
-
-  if (process.env.DEBUG == 1) commands = commands.concat(debugcommands);
+  if (process.env.DEBUG == 1) {
+    let debugcommands = commands.map((x) => ({ ...x, name: '__debug_' + x.name }));
+    commands = commands.concat(debugcommands);
+  }
 
   for (guild of guilds) {
     try {
       console.log(`Started refreshing application (/) commands for guild ${guild.name}.`);
 
-      //await rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands });
+      await rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands });
 
       console.log(`Successfully reloaded application (/) commands for guild ${guild.name}.`);
     } catch (error) {
