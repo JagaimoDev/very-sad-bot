@@ -9,7 +9,7 @@ const token = process.env.TOKEN;
 const clientId = process.env.APPID;
 const guilds = process.env.DEBUG != 1 ? JSON.parse(fs.readFileSync('./guilds.json')).guilds : [{ name: 'Serwer Testowy', id: '765226901706768474' }];
 
-let commands = [];
+const commands = [];
 
 async function createApplicationCommands(dir) {
   await readdir(dir).then(async (files) => {
@@ -33,8 +33,8 @@ if (process.env.DEBUG == 1) console.log('Debugging is enabled.');
   const rest = new REST({ version: '9' }).setToken(token);
 
   if (process.env.DEBUG == 1) {
-    let debugcommands = commands.map((x) => ({ ...x, name: '__debug_' + x.name }));
-    commands = commands.concat(debugcommands);
+    const debugcommands = commands.map((x) => ({ ...x, name: '__debug_' + x.name }));
+    commands.push(...debugcommands);
   }
 
   for (guild of guilds) {
