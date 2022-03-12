@@ -10,7 +10,7 @@ client.once('ready', async () => {
   console.log(`${client.user.tag} logged in successfully!`);
 });
 
-client.login(process.env.DEBUG_TOKEN);
+client.login(process.env.TOKEN);
 
 client.on('interactionCreate', (interaction) => {
   if (!interaction.isCommand()) return;

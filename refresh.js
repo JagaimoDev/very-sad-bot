@@ -4,9 +4,9 @@ const { readdir } = require('fs/promises');
 const fs = require('fs');
 
 require('dotenv').config();
-const token = process.env.DEBUG_TOKEN;
+const token = process.env.TOKEN;
 
-const clientId = process.env.DEBUG_APPID;
+const clientId = process.env.APPID;
 const guilds = JSON.parse(fs.readFileSync('./data.json')).guilds;
 
 let commands = [];
