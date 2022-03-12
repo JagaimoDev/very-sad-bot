@@ -8,6 +8,9 @@ config.startStatusTracker();
 
 client.once('ready', async () => {
   console.log(`${client.user.tag} logged in successfully!`);
+  config.guildsJSON();
+  client.user.setStatus('dnd');
+  //client.user.setActivity('depressing music', {type: 'LISTENING'});
 });
 
 client.login(process.env.TOKEN);
@@ -26,14 +29,15 @@ client.on('interactionCreate', (interaction) => {
 
 client.on('guildCreate', (guild) => {
 	console.log(`Joined guild: ${guild.name}`);
-  const data = JSON.parse(fs.readFileSync('./data.json'));
-  data.guilds.push({ name: guild.name, id: guild.id });
-  fs.writeFileSync('./data.json', JSON.stringify(data));
+  const guilds = JSON.parse(fs.readFileSync('./guilds.json'));
+  if (guilds.guilds.filter(x => x.id == guild.id).length != 0) return;
+  guilds.guilds.push({ name: guild.name, id: guild.id });
+  fs.writeFileSync('./guilds.json', JSON.stringify(guilds));
 });
 
 client.on('guildDelete', (guild) => {
 	console.log(`Left guild: ${guild.name}`);
-  const data = JSON.parse(fs.readFileSync('./data.json'));
-  data.guilds = data.guilds.filter(x => x.id != '888941381274468392');
-  fs.writeFileSync('./data.json', JSON.stringify(data));
+  const guilds = JSON.parse(fs.readFileSync('./guilds.json'));
+  guilds.guilds = guilds.guilds.filter(x => x.id != guild.id);
+  fs.writeFileSync('./guilds.json', JSON.stringify(guilds));
 });

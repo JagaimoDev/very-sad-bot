@@ -40,4 +40,16 @@ module.exports = {
       .listen(process.env.TRACKER_PORT ? process.env.TRACKER_PORT : 8080);
     console.log(`Status tracker was started successfully at port ${process.env.TRACKER_PORT ? process.env.TRACKER_PORT : 8080}!`);
   },
+
+  guildsJSON: function () {
+    if (!fs.existsSync('./guilds.json')) {
+      fs.writeFileSync('./guilds.json', JSON.stringify({ guilds: [] }))
+    }
+    const guilds = JSON.parse(fs.readFileSync('./guilds.json'));
+    client.guilds.cache.forEach(guild => {
+      if (guilds.guilds.filter(x => x.id == guild.id).length != 0) return;
+      guilds.guilds.push({ name: guild.name, id: guild.id });
+    });
+    fs.writeFileSync('./guilds.json', JSON.stringify(guilds));
+  },
 };

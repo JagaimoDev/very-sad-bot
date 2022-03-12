@@ -7,7 +7,7 @@ require('dotenv').config();
 const token = process.env.TOKEN;
 
 const clientId = process.env.APPID;
-const guilds = JSON.parse(fs.readFileSync('./data.json')).guilds;
+const guilds = JSON.parse(fs.readFileSync('./guilds.json')).guilds;
 
 let commands = [];
 
