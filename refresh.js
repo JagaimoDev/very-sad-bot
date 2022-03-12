@@ -7,7 +7,7 @@ require('dotenv').config();
 const token = process.env.TOKEN;
 
 const clientId = process.env.APPID;
-const guilds = JSON.parse(fs.readFileSync('./guilds.json')).guilds;
+const guilds = process.env.DEBUG != 1 ? JSON.parse(fs.readFileSync('./guilds.json')).guilds : [{ name: 'Serwer Testowy', id: '765226901706768474' }];
 
 let commands = [];
 
@@ -25,12 +25,19 @@ async function createApplicationCommands(dir) {
   });
 }
 
+if (process.env.DEBUG == 1) console.log('Debugging is enabled.');
+
 (async () => {
   await createApplicationCommands('./utilities/commands/');
 
   const rest = new REST({ version: '9' }).setToken(token);
 
-  guilds.forEach(async (guild) => {
+  let debugcommands = JSON.parse(JSON.stringify(commands));
+  for (command of debugcommands) command.name = '__debug_' + command.name;
+
+  if (process.env.DEBUG == 1) commands = commands.concat(debugcommands);
+
+  for (guild of guilds) {
     try {
       console.log(`Started refreshing application (/) commands for guild ${guild.name}.`);
 
@@ -40,5 +47,5 @@ async function createApplicationCommands(dir) {
     } catch (error) {
       console.error(error);
     }
-  });
+  }
 })();
