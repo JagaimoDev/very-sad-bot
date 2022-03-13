@@ -9,7 +9,7 @@ client.once('ready', async () => {
   config.startStatusTracker();
   config.guildsJSON();
   console.log(`${client.user.tag} logged in successfully!`);
-  console.log(`Debugging mode is ${process.env.DEBUG != 1 ? 'disabled' : 'enabled'}.`);
+  console.log(`Debug mode is ${process.env.DEBUG != 1 ? 'disabled' : 'enabled'}.`);
   client.user.setStatus('dnd');
   client.user.setActivity('depressing music', { type: 'LISTENING' });
 });
