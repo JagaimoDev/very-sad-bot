@@ -4,12 +4,12 @@ const { client } = require('./config');
 const config = require('./config');
 
 config.getCommandFiles('./utilities/commands/');
-config.startStatusTracker();
 
 client.once('ready', async () => {
+  config.startStatusTracker();
+  config.guildsJSON();
   console.log(`${client.user.tag} logged in successfully!`);
   console.log(`Debugging mode is ${process.env.DEBUG != 1 ? 'disabled' : 'enabled'}.`);
-  config.guildsJSON();
   client.user.setStatus('dnd');
   client.user.setActivity('depressing music', { type: 'LISTENING' });
 });
