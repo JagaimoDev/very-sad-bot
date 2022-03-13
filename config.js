@@ -48,7 +48,7 @@ module.exports = {
     const guilds = JSON.parse(fs.readFileSync('./guilds.json'));
     client.guilds.cache.forEach((guild) => {
       if (guilds.guilds.filter((x) => x.id == guild.id).length != 0) return;
-      guilds.guilds.push({ name: guild.name, id: guild.id });
+      guilds.guilds.push({ id: guild.id, name: guild.name, debug: 'no' });
     });
     fs.writeFileSync('./guilds.json', JSON.stringify(guilds));
   },

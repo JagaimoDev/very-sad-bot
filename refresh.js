@@ -7,7 +7,9 @@ require('dotenv').config();
 const token = process.env.TOKEN;
 
 const clientId = process.env.APPID;
-const guilds = process.env.DEBUG != 1 ? JSON.parse(fs.readFileSync('./guilds.json')).guilds : [{ name: 'Serwer Testowy', id: '765226901706768474' }];
+const guildsJSON = JSON.parse(fs.readFileSync('./guilds.json')).guilds;
+const guilds = guildsJSON.filter((x) => x.debug == 'no');
+const debugguilds = guildsJSON.filter((x) => x.debug == 'yes');
 
 const commands = [];
 
@@ -25,25 +27,37 @@ async function createApplicationCommands(dir) {
   });
 }
 
-if (process.env.DEBUG == 1) console.log('Debugging is enabled.');
-
 (async () => {
   await createApplicationCommands('./utilities/commands/');
 
   const rest = new REST({ version: '9' }).setToken(token);
 
-  if (process.env.DEBUG == 1) {
-    const debugcommands = commands.map((x) => ({ ...x, name: '__debug_' + x.name }));
-    commands.push(...debugcommands);
-  }
-
   for (guild of guilds) {
     try {
-      console.log(`Started refreshing application (/) commands for guild ${guild.name}.`);
+      console.log(`Started refreshing application commands for guild ${guild.name}.`);
 
       await rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands });
 
-      console.log(`Successfully reloaded application (/) commands for guild ${guild.name}.`);
+      console.log(`Successfully reloaded application commands for guild ${guild.name}.`);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (debugguilds.length == 0) return;
+
+  console.log('DEBUG GUILDS FOUND');
+
+  const debugcommands = commands.map((x) => ({ ...x, name: '__debug_' + x.name }));
+  commands.push(...debugcommands);
+
+  for (guild of debugguilds) {
+    try {
+      console.log(`Started refreshing application commands for debug guild ${guild.name}.`);
+
+      await rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands });
+
+      console.log(`Successfully reloaded application commands for debug guild ${guild.name}.`);
     } catch (error) {
       console.error(error);
     }
