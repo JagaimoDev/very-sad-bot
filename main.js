@@ -8,7 +8,7 @@ config.startStatusTracker();
 
 client.once('ready', async () => {
   console.log(`${client.user.tag} logged in successfully!`);
-  console.log('Debugging mode is enabled.')
+  console.log(`Debugging mode is ${process.env.DEBUG != 1 ? 'disabled' : 'enabled'}.`);
   config.guildsJSON();
   client.user.setStatus('dnd');
   client.user.setActivity('depressing music', { type: 'LISTENING' });
