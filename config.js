@@ -42,11 +42,10 @@ module.exports = {
   },
 
   guildsJSON: function () {
-    if (!fs.existsSync('./guilds.json')) {
-      fs.writeFileSync('./guilds.json', JSON.stringify({ guilds: [] }));
-    }
-
-    const guilds = JSON.parse(fs.readFileSync('./guilds.json'));
+    let guilds;
+    
+    if (!fs.existsSync('./guilds.json')) guilds = { guilds: [] };
+    else guilds = JSON.parse(fs.readFileSync('./guilds.json'));
 
     for (guild of guilds.guilds) {
       if ([...client.guilds.cache.filter((x) => x.id == guild.id)].length != 0) continue;
