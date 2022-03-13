@@ -45,11 +45,20 @@ module.exports = {
     if (!fs.existsSync('./guilds.json')) {
       fs.writeFileSync('./guilds.json', JSON.stringify({ guilds: [] }));
     }
+
     const guilds = JSON.parse(fs.readFileSync('./guilds.json'));
+
+    for (guild of guilds.guilds) {
+      if ([...client.guilds.cache.filter((x) => x.id == guild.id)].length != 0) continue;
+      guilds.guilds = guilds.guilds.filter((x) => x.id != guild.id);
+    }
+
     client.guilds.cache.forEach((guild) => {
       if (guilds.guilds.filter((x) => x.id == guild.id).length != 0) return;
       guilds.guilds.push({ id: guild.id, name: guild.name, debug: 'no' });
     });
+
     fs.writeFileSync('./guilds.json', JSON.stringify(guilds));
+    console.log('guilds.json file has been updated successfully!');
   },
 };
